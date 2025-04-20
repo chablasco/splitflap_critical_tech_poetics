@@ -21,7 +21,7 @@
 let sentences = [];
 let currentMessage = "";
 let currentMessageIndex = 0;
-let splitSpeed = 1;
+let splitSpeed = 2;
 
 let cols, rows;
 let charWidth = 12;
@@ -39,7 +39,7 @@ let lastSwitchTime = 0;
 let pauseDuration = 6000;
 
 function preload() {
-  // Ladda meningar från textfil
+  // Load external file from assets folder
   sentences = loadStrings("assets/sentences.txt");
 }
 
@@ -59,7 +59,7 @@ function setup() {
     sentences = ["NO SENTENCES FOUND"];
   }
 
-  currentMessageIndex = 0;
+  currentMessageIndex = int(random(sentences.length)); // start at random message
   currentMessage = sentences[currentMessageIndex].toUpperCase();
   assignMessageToGrid(currentMessage);
 
