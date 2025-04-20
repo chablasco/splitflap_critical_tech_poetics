@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CB Critical Tech Poetics</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script>
+let sentences = [
+  "THE FUTURE IS NOW",
+  "HELLO WORLD",
+  "CLICK TO CHANGE MESSAGE",
+  "SPLIT FLAP DISPLAY SIMULATION",
+  "OPENAI IS COOL"
+];
+
+let currentMessage = "";
+let currentMessageIndex = 0;
+let splitSpeed = 2;
+
+let cols, rows;
+let charWidth = 12;
+let charHeight = 18;
+let charset = [
+  ' ', '.', '-', '+', '*', '#', '@',
+  'A','B','C','D','E','F','G','H','I','J','K','L',
+  'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','Å','Ä','Ö',
+  '0','1','2','3','4','5','6','7','8','9'
+];
+
+let currentIndices;
+let targetIndices;
+let lastSwitchTime = 0;
+let pauseDuration = 6000;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  textFont('Courier', 18);
+  textAlign(CENTER, CENTER);
+  frameRate(30);
+
+  cols = floor(width / charWidth);
+  rows = floor(height / charHeight);
+
+  currentIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
+  targetIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
+
+  currentMessageIndex = int(random(sentences.length));
+  currentMessage = sentences[currentMessageIndex].toUpperCase();
+  assignMessageToGrid(currentMessage);
+
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      currentIndices[x][y] = int(random(charset.length));
+    }
+  }
+
+  lastSwitchTime = millis();
+}
+
+function draw() {
+  background(0);
+  fill(255);
+
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      let current = currentIndices[x][y];
+      let target = targetIndices[x][y];
+
+      if (frameCount % splitSpeed === 0 && current !== target) {
+        current = (current + 1) % charset.length;
+        currentIndices[x][y] = current;
+      }
+
+      let c = charset[current];
+      text(c, x * charWidth + charWidth / 2, y * charHeight + charHeight / 2);
+    }
+  }
+
+  if (millis() - lastSwitchTime > pauseDuration) {
+    nextSentence();
+  }
+}
+
+function mousePressed() {
+  nextSentence();
+}
+
+function nextSentence() {
+  currentMessageIndex = (currentMessageIndex + 1) % sentences.length;
+  currentMessage = sentences[currentMessageIndex].toUpperCase();
+  assignMessageToGrid(currentMessage);
+  lastSwitchTime = millis();
+}
+
+function assignMessageToGrid(msg) {
+  let msgLen = msg.length;
+  let startX = floor((cols - msgLen) / 2);
+  let startY = floor(rows / 2);
+
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      targetIndices[x][y] = findCharIndex(' ');
+    }
+  }
+
+  for (let i = 0; i < msgLen; i++) {
+    let c = msg.charAt(i);
+    let idx = findCharIndex(c);
+    if (idx === -1) idx = 0;
+    if (startX + i >= 0 && startX + i < cols)
+      targetIndices[startX + i][startY] = idx;
+  }
+}
+
+function findCharIndex(c) {
+  for (let i = 0; i < charset.length; i++) {
+    if (charset[i] === c) return i;
+  }
+  return 0;
+}
+</script>
+</body>
+</html>
