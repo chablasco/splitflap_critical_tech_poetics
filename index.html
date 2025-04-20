@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>CB Critical Tech Poetics</title>
+  <meta charset="UTF-8">
+  <title>Split Flap Display</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <style>
     html, body {
@@ -18,14 +18,7 @@
 </head>
 <body>
 <script>
-let sentences = [
-  "THE FUTURE IS NOW",
-  "HELLO WORLD",
-  "CLICK TO CHANGE MESSAGE",
-  "SPLIT FLAP DISPLAY SIMULATION",
-  "OPENAI IS COOL"
-];
-
+let sentences = [];
 let currentMessage = "";
 let currentMessageIndex = 0;
 let splitSpeed = 2;
@@ -45,6 +38,11 @@ let targetIndices;
 let lastSwitchTime = 0;
 let pauseDuration = 6000;
 
+function preload() {
+  // Ladda meningar från textfil
+  sentences = loadStrings("assets/sentences.txt");
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   textFont('Courier', 18);
@@ -57,7 +55,11 @@ function setup() {
   currentIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
   targetIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
 
-  currentMessageIndex = int(random(sentences.length));
+  if (sentences.length === 0) {
+    sentences = ["NO SENTENCES FOUND"];
+  }
+
+  currentMessageIndex = 0;
   currentMessage = sentences[currentMessageIndex].toUpperCase();
   assignMessageToGrid(currentMessage);
 
