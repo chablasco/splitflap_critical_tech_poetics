@@ -72,6 +72,15 @@ function setup() {
   lastSwitchTime = millis();
 }
 
+function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+
+function mousePressed() {
+      fullscreen(!fullscreen());
+    }
+
+
 function draw() {
   background(0);
   fill(255);
