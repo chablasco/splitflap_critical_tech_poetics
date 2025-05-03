@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>CB Critical Tech Poetics</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
   <style>
@@ -44,31 +44,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  textFont('Courier', 18);
-  textAlign(CENTER, CENTER);
-  frameRate(30);
-
-  cols = floor(width / charWidth);
-  rows = floor(height / charHeight);
-
-  currentIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
-  targetIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
-
-  if (sentences.length === 0) {
-    sentences = ["NO SENTENCES FOUND"];
-  }
-
-  currentMessageIndex = int(random(sentences.length));
-  currentMessage = sentences[currentMessageIndex].toUpperCase();
-  assignMessageToGrid(currentMessage);
-
-  for (let x = 0; x < cols; x++) {
-    for (let y = 0; y < rows; y++) {
-      currentIndices[x][y] = int(random(charset.length));
-    }
-  }
-
-  lastSwitchTime = millis();
+  setupGrid();
 }
 
 function draw() {
@@ -96,12 +72,40 @@ function draw() {
 }
 
 function mousePressed() {
-  let fs = fullscreen();
-  fullscreen(!fs);
+  fullscreen(!fullscreen());
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  setupGrid();
+}
+
+function setupGrid() {
+  textFont('Courier', 18);
+  textAlign(CENTER, CENTER);
+  frameRate(30);
+
+  cols = floor(width / charWidth);
+  rows = floor(height / charHeight);
+
+  currentIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
+  targetIndices = Array.from({ length: cols }, () => Array(rows).fill(0));
+
+  if (sentences.length === 0) {
+    sentences = ["NO SENTENCES FOUND"];
+  }
+
+  currentMessageIndex = int(random(sentences.length));
+  currentMessage = sentences[currentMessageIndex].toUpperCase();
+  assignMessageToGrid(currentMessage);
+
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      currentIndices[x][y] = int(random(charset.length));
+    }
+  }
+
+  lastSwitchTime = millis();
 }
 
 function nextSentence() {
