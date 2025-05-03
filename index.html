@@ -39,7 +39,6 @@ let lastSwitchTime = 0;
 let pauseDuration = 6000;
 
 function preload() {
-  // Load external file from assets folder
   sentences = loadStrings("assets/sentences.txt");
 }
 
@@ -59,7 +58,7 @@ function setup() {
     sentences = ["NO SENTENCES FOUND"];
   }
 
-  currentMessageIndex = int(random(sentences.length)); // start at random message
+  currentMessageIndex = int(random(sentences.length));
   currentMessage = sentences[currentMessageIndex].toUpperCase();
   assignMessageToGrid(currentMessage);
 
@@ -71,15 +70,6 @@ function setup() {
 
   lastSwitchTime = millis();
 }
-
-function windowResized() {
-      resizeCanvas(windowWidth, windowHeight);
-    }
-
-function mousePressed() {
-      fullscreen(!fullscreen());
-    }
-
 
 function draw() {
   background(0);
@@ -106,7 +96,12 @@ function draw() {
 }
 
 function mousePressed() {
-  nextSentence();
+  let fs = fullscreen();
+  fullscreen(!fs);
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function nextSentence() {
